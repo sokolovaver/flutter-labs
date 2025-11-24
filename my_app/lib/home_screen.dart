@@ -8,7 +8,6 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> tasks = [
     {
@@ -30,6 +29,25 @@ class _HomeScreenState extends State<HomeScreen> {
       'completed': false,
     },
   ];
+
+  List<Map<String, dynamic>> filteredTasks = [];
+  String searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    filteredTasks = List.from(tasks);
+  }
+
+  void _filterTasks(String query) {
+    setState(() {
+      searchQuery = query.toLowerCase();
+      filteredTasks = tasks.where((task) {
+        return task['title'].toLowerCase().contains(searchQuery) ||
+            task['preview'].toLowerCase().contains(searchQuery);
+      }).toList();
+    });
+  }
 
   void _openTaskEditor({Map<String, dynamic>? task, int? index}) {
     Navigator.of(context)
@@ -55,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
           } else {
             tasks.add(newTask);
           }
+          // Обновляем фильтр после изменения списка задач
+          _filterTasks(searchQuery);
         });
       }
     });
@@ -75,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               setState(() {
                 tasks.removeAt(index);
+                _filterTasks(searchQuery);
               });
               Navigator.of(context).pop();
             },
@@ -105,17 +126,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-              onChanged: (value) {
-                // Можно добавить фильтр задач
-              },
+              onChanged: _filterTasks,
             ),
           ),
           // Список задач
           Expanded(
             child: ListView.builder(
-              itemCount: tasks.length,
+              itemCount: filteredTasks.length,
               itemBuilder: (context, index) {
-                final task = tasks[index];
+                final task = filteredTasks[index];
+                // Находим индекс этой задачи в основном списке, чтобы корректно удалить или редактировать
+                final originalIndex = tasks.indexOf(task);
                 return Card(
                   margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                   child: ListTile(
@@ -123,7 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: task['completed'],
                       onChanged: (value) {
                         setState(() {
-                          tasks[index]['completed'] = value!;
+                          tasks[originalIndex]['completed'] = value!;
+                          _filterTasks(searchQuery);
                         });
                       },
                     ),
@@ -150,10 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _showDeleteDialog(index),
+                      onPressed: () => _showDeleteDialog(originalIndex),
                     ),
                     onTap: () {
-                      _openTaskEditor(task: task, index: index);
+                      _openTaskEditor(task: task, index: originalIndex);
                     },
                   ),
                 );
@@ -165,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openTaskEditor(),
         child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
