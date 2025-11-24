@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home_screen.dart';
+import 'task_view_model.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TaskViewModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,10 +36,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-
   final List<Widget> _pages = [
     HomeScreen(),
-    // Можно добавить другие страницы, например, цитату
     Center(child: Text('Цитата будет тут')),
   ];
 
@@ -57,4 +62,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
