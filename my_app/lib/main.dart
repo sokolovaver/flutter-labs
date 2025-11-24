@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'home_screen.dart';
-import 'task_view_model.dart';
+import 'ui/home_screen.dart';
+import 'ui/task_view_model.dart';
+import 'ui/quote_screen.dart'; // Добавляем импорт
 
 void main() {
   runApp(
@@ -36,9 +37,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  final List<Widget> _pages = [
+
+  // Используем const для неизменяемых виджетов
+  final List<Widget> _pages = const [
     HomeScreen(),
-    Center(child: Text('Цитата будет тут')),
+    QuoteScreen(), // Заменяем на отдельный виджет
   ];
 
   @override
@@ -48,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: 'Задачи',

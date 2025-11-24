@@ -42,7 +42,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     final content = _contentController.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Введите название задачи')),
+        const SnackBar(content: Text('Введите название задачи')),
       );
       return;
     }
@@ -61,8 +61,8 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
         title: Text(widget.initialTitle == null ? 'Добавить задачу' : 'Редактировать задачу'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(), // Отмена
-            child: Text('Отмена', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -73,17 +73,17 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
             // Название
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Название задачи',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Описание
             Expanded(
               child: TextField(
                 controller: _contentController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Описание',
                   border: OutlineInputBorder(),
                 ),
@@ -92,18 +92,18 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                 textAlignVertical: TextAlignVertical.top,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Кнопки
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                   onPressed: _saveTask,
-                  child: Text('Сохранить'),
+                  child: const Text('Сохранить'),
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Отмена'),
+                  child: const Text('Отмена'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
                   ),
